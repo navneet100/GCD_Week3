@@ -1,0 +1,86 @@
+---
+title: "Readme Week 3 project"
+output: html_document
+---
+
+This is a Readme mark down file for Week 3 project
+
+###Set Working directory
+
+```{r}
+setwd("D:\\Documents\\Downloads\\GCD\\Week 3\\Docs\\UCI HAR Dataset")
+```
+
+###Load Data
+
+```{r}
+dataSubTrain <- read.table(file.path("UCI HAR Dataset\\train","subject_train.txt"),header=F)
+dataSubTest <- read.table(file.path("UCI HAR Dataset\\test","subject_test.txt"),header=F)
+
+
+dataActTrain <- read.table(file.path("UCI HAR Dataset\\train","Y_train.txt"),header=F)
+dataActTest <- read.table(file.path("UCI HAR Dataset\\test","Y_test.txt"),header=F)
+
+
+dataFeaturesTrain <- read.table(file.path("UCI HAR Dataset\\train","X_train.txt"),header=F)
+dataFeaturesTest <- read.table(file.path("UCI HAR Dataset\\test","X_test.txt"),header=F)
+
+```
+
+
+### Combine Data row wise
+
+```{r}
+dataSubject<-rbind(dataSubTrain,dataSubTest)
+dataActivity<-rbind(dataActTrain,dataActTest)
+dataFeatures<-rbind(dataFeaturesTrain,dataFeaturesTest)
+```
+
+###Give names to Columns
+
+```{r}
+names(dataSubject) <-c("subject")
+names(dataActivity) <-c("activity")
+
+featurColNnames<-read.table("UCI HAR Dataset\\features.txt",header=F)
+names(dataFeatures) <-featurColNnames$V2
+```
+
+###Merge Data
+```{r}
+
+mergedData<-cbind(dataSubject,dataActivity)
+#mergedData
+mergedData<-cbind(dataFeatures,mergedData)
+
+```
+
+###Take Selective Columns
+```{r}
+subsetFeatureNames<-featurColNnames$V2[grep("mean\\(\\)|std\\(\\)", featurColNnames$V2)]
+
+selNames<-c(as.character(subsetFeatureNames), "subject", "activity" )
+#selNames
+mergedData<-subset(mergedData,select=selNames)
+```
+
+
+### Read Label names and give descriptive names
+```{r}
+actLabels <- read.table("UCI HAR Dataset\\activity_labels.txt",header = F)
+
+names(mergedData)<-gsub("^t", "time", names(mergedData))
+names(mergedData)<-gsub("^f", "frequency", names(mergedData))
+names(mergedData)<-gsub("Acc", "Accelerometer", names(mergedData))
+names(mergedData)<-gsub("Gyro", "Gyroscope", names(mergedData))
+names(mergedData)<-gsub("Mag", "Magnitude", names(mergedData))
+names(mergedData)<-gsub("BodyBody", "Body", names(mergedData))
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
